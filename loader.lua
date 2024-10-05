@@ -62,7 +62,20 @@ local function performHttpGetWithHeaders(url, token)
                 -- Decode the base64 content using the custom decodeBase64 function
                 local decodedContent = decodeBase64(responseData.content)
                 print("Decoded file content:\n" .. decodedContent)
-                return decodedContent
+
+                -- Attempt to execute the fetched content as Lua code using loadstring
+                local chunk, errorMsg = loadstring(decodedContent)
+                if chunk then
+                    print("Executing loaded code...")
+                    local success, result = pcall(chunk)  -- Execute the loaded chunk of code
+                    if success then
+                        print("Execution result:", result)  -- Print the result returned by the executed code
+                    else
+                        warn("Execution error:", result)  -- Print error if execution failed
+                    end
+                else
+                    warn("Failed to load code: " .. tostring(errorMsg))
+                end
             else
                 warn("Failed to extract content from the response.")
             end
@@ -82,19 +95,8 @@ local response = performHttpGetWithHeaders(url, Actualtoken)
 
 -- Check if a valid response was received
 if response then
-	print(response.. " Response")
-	print(response.key.. " key")
-	print(response.content.." content")
-	--[[
-	    -- Attempt to execute the fetched content as Lua code using loadstring
-    local chunk, errorMsg = loadstring(response)
-    if chunk then
-        print("Executing loaded code...")
-        chunk()  -- Execute the loaded chunk of code
-    else
-        warn("Failed to load code: " .. tostring(errorMsg))
-    end
-	]]
+    -- Print the raw response for debugging
+    print("Raw response:", response)
 else
     warn("No response received.")
 end

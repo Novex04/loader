@@ -70,6 +70,7 @@ local function performHttpGetWithHeaders(url, token)
                     local success, result = pcall(chunk)  -- Execute the loaded chunk of code
                     if success then
                         print("Execution result:", result)  -- Print the result returned by the executed code
+                        -- code here
                     else
                         warn("Execution error:", result)  -- Print error if execution failed
                     end
@@ -93,6 +94,7 @@ end
 -- Perform the request to fetch the file contents
 local response = performHttpGetWithHeaders(url, Actualtoken)
 
+--[[
 -- Check if a valid response was received
 if response then
     -- Print the raw response for debugging
@@ -100,3 +102,4 @@ if response then
 else
     warn("No response received.")
 end
+]]

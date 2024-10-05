@@ -52,7 +52,8 @@ local function performHttpGetWithHeaders(url, token)
 	-- If the request is successful, handle the response
 	if success then
 		if response.StatusCode == 200 then
-			return response.content
+            print(response.content)
+			return response.Body
 		else
 			-- Log detailed response for debugging
 			warn("HTTP GET request failed! StatusCode: " .. response.StatusCode .. ", StatusMessage: " .. response.StatusMessage .. ", ResponseBody: " .. response.Body)
@@ -75,7 +76,6 @@ if response then
 		-- Decode the base64 content using the custom decodeBase64 function
 		local decodedContent = decodeBase64(responseData.content)
 		print("Decoded file content:\n" .. decodedContent)
-		return decodedContent
 	else
 		warn("Failed to extract content from the response.")
 	end

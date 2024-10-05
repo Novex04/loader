@@ -56,8 +56,16 @@ local function performHttpGetWithHeaders(url, token)
 
         if response.StatusCode == 200 then
             print("Status code 200: Success")
-            print("Response body:\n", response.Body)  -- Print the response body
-            return response.Body  -- Return the response body
+            -- Parse the JSON response (file contents are returned in base64)
+            local responseData = HttpService:JSONDecode(response.Body)
+            if responseData and responseData.content then
+                -- Decode the base64 content using the custom decodeBase64 function
+                local decodedContent = decodeBase64(responseData.content)
+                print("Decoded file content:\n" .. decodedContent)
+                return decodedContent
+            else
+                warn("Failed to extract content from the response.")
+            end
         else
             -- Log detailed response for debugging
             warn("HTTP GET request failed! StatusCode: " .. response.StatusCode .. ", StatusMessage: " .. response.StatusMessage .. ", ResponseBody: " .. response.Body)
@@ -74,16 +82,8 @@ local response = performHttpGetWithHeaders(url, Actualtoken)
 
 -- Check if a valid response was received
 if response then
-    -- Parse the JSON response (file contents are returned in base64)
-    local responseData = HttpService:JSONDecode(response)
-    if responseData and responseData.content then
-        -- Decode the base64 content using the custom decodeBase64 function
-        local decodedContent = decodeBase64(responseData.content)
-        print("Decoded file content:\n" .. decodedContent)
-        return decodedContent
-    else
-        warn("Failed to extract content from the response.")
-    end
+    -- Response handling is done within the `performHttpGetWithHeaders` function
+    -- No additional handling needed here if everything is processed correctly
 else
     warn("No response received.")
 end

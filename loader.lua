@@ -1,5 +1,6 @@
 local HttpService = game:GetService("HttpService")
 
+
 -- Obfuscated GitHub Personal Access Token
 local token = "\103\104\112\95\77\82\83\105\117\65\77\83\84\79\102\52\89\65\73\55\101\88\49\105\102\82\108\115\107\88\114\88\97\65\48\118\100\121\101\114\10"
 
@@ -32,11 +33,28 @@ local function decodeBase64(data)
     end))
 end
 
+local function Keysys(result)
+	local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Consistt/Ui/main/UnLeaked"))()
+	local Notif = library:InitNotifications()
+	library.title = "Keysys"
+	Init = library:Init()
+	local tab1 = Init:NewTab("Key")
+	local Textbox1 = tab1:NewTextbox("Input Key:", "", "1", "all", "small", true, false, function(val)
+		if val == result then
+			Notif:Notify("Correct Key, Loading MainUi", 5, "success")
+			writefile("Novex/Config.cfg", val)
+			performHttpGetWithHeaders(mainUrl, Actualtoken)
+		else
+			Notif:Notify("Wrong Key.", 5, "error")
+		end
+	end)
+end
+
 -- Reconstruct the token and remove any extra spaces
 local Actualtoken = reconstructString(token):gsub("%s+", "")
 
 -- Function to perform the HTTP GET request with detailed error logging
-local function performHttpGetWithHeaders(url, token, onSuccess)
+local function performHttpGetWithHeaders(url, token)
     local headers = {
         ["Authorization"] = "token " .. token  -- Authorization header with the token
     }
@@ -72,9 +90,6 @@ local function performHttpGetWithHeaders(url, token, onSuccess)
                     if success then
                         print("Execution result:", result)  -- Print the result returned by the executed code
                         -- Call the onSuccess callback function if provided
-                        if onSuccess then
-                            onSuccess(result)
-                        end
                     else
                         warn("Execution error:", result)  -- Print error if execution failed
                     end
@@ -101,12 +116,13 @@ local function readKey()
     if isfile(keyFilePath) then
         local localKey = readfile(keyFilePath)
         -- Fetch the key from GitHub and compare
-        performHttpGetWithHeaders(keyUrl, Actualtoken, function(fetchedKey)
-            if localKey == fetchedKey then
+        performHttpGetWithHeaders(keyUrl, Actualtoken, function(result)
+            if localKey == result then
                 print("Found Key in local storage! :D")
                 -- Execute main.lua here
                 performHttpGetWithHeaders(mainUrl, Actualtoken)
             else
+				keysis(result)
                 print("Your local key is not valid.")
             end
         end)

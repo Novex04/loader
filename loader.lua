@@ -42,7 +42,7 @@ local function performHttpGetWithHeaders(url, token)
 
 	-- Perform the HTTP request using RequestAsync with headers
 	local success, response = pcall(function()
-		return request({
+		return game:GetAsync({
 			Url = url,
 			Method = "GET",
 			Headers = headers
@@ -52,8 +52,7 @@ local function performHttpGetWithHeaders(url, token)
 	-- If the request is successful, handle the response
 	if success then
 		if response.StatusCode == 200 then
-            print(response.content)
-			return response.Body
+			return response.content
 		else
 			-- Log detailed response for debugging
 			warn("HTTP GET request failed! StatusCode: " .. response.StatusCode .. ", StatusMessage: " .. response.StatusMessage .. ", ResponseBody: " .. response.Body)
@@ -76,6 +75,7 @@ if response then
 		-- Decode the base64 content using the custom decodeBase64 function
 		local decodedContent = decodeBase64(responseData.content)
 		print("Decoded file content:\n" .. decodedContent)
+		return decodedContent
 	else
 		warn("Failed to extract content from the response.")
 	end

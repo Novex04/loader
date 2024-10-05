@@ -53,7 +53,7 @@ local function performHttpGetWithHeaders(url, token)
 	if success then
 		if response.StatusCode == 200 then
 			print("statuscode 200, works, returning content")
-			print(response.content)
+			print(response)
 			return response.content
 		else
 			-- Log detailed response for debugging

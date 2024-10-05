@@ -3,9 +3,10 @@ local HttpService = game:GetService("HttpService")
 -- Obfuscated GitHub Personal Access Token
 local token = "\103\104\112\95\77\82\83\105\117\65\77\83\84\79\102\52\89\65\73\55\101\88\49\105\102\82\108\115\107\88\114\88\97\65\48\118\100\121\101\114\10"
 
--- GitHub API URL for the file in your repo
-local url = "https://api.github.com/repos/Novex04/Novex/contents/key.txt?ref=main"
-local mainurl = "https://api.github.com/repos/Novex04/Novex/contents/main.lua?ref=main"
+-- GitHub API URLs for the files in your repo
+local keyUrl = "https://api.github.com/repos/Novex04/Novex/contents/key.txt?ref=main"
+local mainUrl = "https://api.github.com/repos/Novex04/Novex/contents/main.lua?ref=main"
+
 -- Function to reconstruct the obfuscated string (token)
 local function reconstructString(obfuscatedStr)
     local reconstructed = obfuscatedStr:gsub("\\(%d+)", function(num)
@@ -69,14 +70,10 @@ local function performHttpGetWithHeaders(url, token)
                     print("Executing loaded code...")
                     local success, result = pcall(chunk)  -- Execute the loaded chunk of code
                     if success then
-
-
-
                         print("Execution result:", result)  -- Print the result returned by the executed code
-                        -- code here
-
-
-
+                        -- Here you can call another function that needs to use performHttpGetWithHeaders
+                        -- Example:
+                        HandleOtherRequest(mainUrl, Actualtoken)
                     else
                         warn("Execution error:", result)  -- Print error if execution failed
                     end
@@ -97,14 +94,13 @@ local function performHttpGetWithHeaders(url, token)
     return nil
 end
 
--- Perform the request to fetch the file contents
-local response = performHttpGetWithHeaders(url, Actualtoken)
+-- Perform the request to fetch the key file contents
+performHttpGetWithHeaders(keyUrl, Actualtoken)
 
--- Check if a valid response was received
-if response then
-    -- Print the raw response for debugging
-    print("Raw response:", response)
-else
-    warn("No response received.")
+-- Function to handle another HTTP request using performHttpGetWithHeaders
+local function HandleOtherRequest(url, token)
+    performHttpGetWithHeaders(url, token)
 end
 
+-- Example usage: Call handleAnotherRequest with mainUrl and Actualtoken
+-- handleAnotherRequest(mainUrl, Actualtoken)

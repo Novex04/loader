@@ -48,10 +48,11 @@ local function performHttpGetWithHeaders(url, token)
 			Headers = headers
 		})
 	end)
-
+	warn(response, success)
 	-- If the request is successful, handle the response
 	if success then
 		if response.StatusCode == 200 then
+			print("statuscode 200, works, returning content")
 			return response.content
 		else
 			-- Log detailed response for debugging

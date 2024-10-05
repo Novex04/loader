@@ -82,8 +82,8 @@ local response = performHttpGetWithHeaders(url, Actualtoken)
 
 -- Check if a valid response was received
 if response then
-    -- Response handling is done within the `performHttpGetWithHeaders` function
-    -- No additional handling needed here if everything is processed correctly
+    warn(response)
+    warn(response.content)
 else
     warn("No response received.")
 end

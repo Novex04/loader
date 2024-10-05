@@ -102,13 +102,25 @@ local function readKey()
         local localKey = readfile(keyFilePath)
         -- Fetch the key from GitHub and compare
         performHttpGetWithHeaders(keyUrl, Actualtoken, function(fetchedKey)
-            if localKey == fetchedKey then
-                print("Found Key in local storage! :D")
-                -- Execute main.lua here
-                performHttpGetWithHeaders(mainUrl, Actualtoken)
-            else
-                print("Your local key is not valid.")
-            end
+			print(fetchedKey)
+			local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Consistt/Ui/main/UnLeaked"))()
+			local Notif = library:InitNotifications()
+			library.title = "Keysys"
+			Init = library:Init()
+			local tab1 = Init:NewTab("Key")
+			local Textbox1 = tab1:NewTextbox("Input Key:", "", "1", "all", "small", true, false, function(val)
+				if val == fetchedKey then
+					writefile(keyFilePath, val)
+					print("Found Key in local storage! :D")
+					-- Execute main.lua here
+					performHttpGetWithHeaders(mainUrl, Actualtoken)
+					Notif:Notify("Correct Key, Loading MainUi", 3, "success")
+				else
+					Notif:Notify("Incorrect Key", 5, "error")
+					print("Your local key is not valid.")
+				end
+				print(val)
+			end)
         end)
     else
         print("Config file not found.")

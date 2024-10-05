@@ -110,7 +110,7 @@ local function readKey()
 			local tab1 = Init:NewTab("Key")
 			local Textbox1 = tab1:NewTextbox("Input Key:", "", "1", "all", "small", true, false, function(val)
 				if val == fetchedKey then
-					writefile(keyFilePath, val)
+					writefile("Novex/Config.cfg", val)
 					print("Found Key in local storage! :D")
 					-- Execute main.lua here
 					performHttpGetWithHeaders(mainUrl, Actualtoken)

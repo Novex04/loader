@@ -115,16 +115,16 @@ local function readKey()
     local keyFilePath = "Novex/Config.cfg"
     if isfile(keyFilePath) then
         local localKey = readfile(keyFilePath)
-		print(localkey)
+	print(localkey)
         -- Fetch the key from GitHub and compare
         performHttpGetWithHeaders(keyUrl, Actualtoken, function(result)
-			print(result)
+	print(result)
             if localKey == result then
                 print("Found Key in local storage! :D")
                 -- Execute main.lua here
                 performHttpGetWithHeaders(mainUrl, Actualtoken)
             else
-				keysis(result)
+		keysis(result)
                 print("Your local key is not valid.")
             end
         end)

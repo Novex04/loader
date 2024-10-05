@@ -36,7 +36,7 @@ end
 local Actualtoken = reconstructString(token):gsub("%s+", "")
 
 -- Function to perform the HTTP GET request with detailed error logging
-local function performHttpGetWithHeaders(url, token)
+local function performHttpGetWithHeaders(url, token, onSuccess)
     local headers = {
         ["Authorization"] = "token " .. token  -- Authorization header with the token
     }
@@ -71,9 +71,10 @@ local function performHttpGetWithHeaders(url, token)
                     local success, result = pcall(chunk)  -- Execute the loaded chunk of code
                     if success then
                         print("Execution result:", result)  -- Print the result returned by the executed code
-                        -- Here you can call another function that needs to use performHttpGetWithHeaders
-                        -- Example:
-                        HandleOtherRequest(mainUrl, Actualtoken)
+                        -- Call the onSuccess callback function if provided
+                        if onSuccess then
+                            onSuccess(result)
+                        end
                     else
                         warn("Execution error:", result)  -- Print error if execution failed
                     end
@@ -95,12 +96,7 @@ local function performHttpGetWithHeaders(url, token)
 end
 
 -- Perform the request to fetch the key file contents
-performHttpGetWithHeaders(keyUrl, Actualtoken)
-
--- Function to handle another HTTP request using performHttpGetWithHeaders
-local function HandleOtherRequest(url, token)
-    performHttpGetWithHeaders(url, token)
-end
-
--- Example usage: Call handleAnotherRequest with mainUrl and Actualtoken
--- handleAnotherRequest(mainUrl, Actualtoken)
+performHttpGetWithHeaders(keyUrl, Actualtoken, function()
+    -- After fetching key.txt, proceed to fetch and execute main.lua
+    performHttpGetWithHeaders(mainUrl, Actualtoken)
+end)

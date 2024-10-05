@@ -5,7 +5,7 @@ local token = "\103\104\112\95\77\82\83\105\117\65\77\83\84\79\102\52\89\65\73\5
 
 -- GitHub API URL for the file in your repo
 local url = "https://api.github.com/repos/Novex04/Novex/contents/key.txt?ref=main"
-
+local mainurl = "https://api.github.com/repos/Novex04/Novex/contents/main.lua?ref=main"
 -- Function to reconstruct the obfuscated string (token)
 local function reconstructString(obfuscatedStr)
     local reconstructed = obfuscatedStr:gsub("\\(%d+)", function(num)
@@ -54,7 +54,7 @@ local function performHttpGetWithHeaders(url, token)
         -- Log the entire response for debugging
         print("Response object:\n", response)
 
-        if response.StatusCode == 200 then
+        if response and response.StatusCode == 200 then
             print("Status code 200: Success")
             -- Parse the JSON response (file contents are returned in base64)
             local responseData = HttpService:JSONDecode(response.Body)
@@ -69,8 +69,14 @@ local function performHttpGetWithHeaders(url, token)
                     print("Executing loaded code...")
                     local success, result = pcall(chunk)  -- Execute the loaded chunk of code
                     if success then
+
+
+
                         print("Execution result:", result)  -- Print the result returned by the executed code
                         -- code here
+
+
+
                     else
                         warn("Execution error:", result)  -- Print error if execution failed
                     end
@@ -94,7 +100,6 @@ end
 -- Perform the request to fetch the file contents
 local response = performHttpGetWithHeaders(url, Actualtoken)
 
---[[
 -- Check if a valid response was received
 if response then
     -- Print the raw response for debugging
@@ -102,4 +107,4 @@ if response then
 else
     warn("No response received.")
 end
-]]
+

